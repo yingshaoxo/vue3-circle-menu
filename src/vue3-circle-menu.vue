@@ -77,10 +77,10 @@ export default /*#__PURE__*/ defineComponent({
 <template>
   <div
     :ref="
-        (ref:any) => {
-          dict.tempData.triggerReference = ref;
-        }
-      "
+      (el) => {
+        dict.tempData.triggerReference = el;
+      }
+    "
     @click="
       () => {
         dict.functions.getTriggerPosition(dict.tempData.triggerReference);

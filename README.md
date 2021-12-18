@@ -1,20 +1,24 @@
 # vue3-circle-menu
 
+## Demo
+
+![Alt Text](demo.gif)
+
 ## How to use
 
 ```vue
 <script lang="ts">
 import { defineComponent } from "vue";
-import Vue3CircleMenu from "@/vue3-circle-menu.vue";
+import Vue3CircleMenu from "vue3-circle-menu";
 
 export default defineComponent({
-  name: "ServeDev",
+  name: "App",
   components: {
     Vue3CircleMenu,
   },
   setup: () => {
     return {
-      showAlert: (text: String) => {
+      showAlert: (text: string) => {
         alert(text);
       },
     };

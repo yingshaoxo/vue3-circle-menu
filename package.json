@@ -1,5 +1,5 @@
 {
-  "name": "Vue3CircleMenu",
+  "name": "vue3-circle-menu",
   "version": "1.0.0",
   "description": "",
   "main": "dist/vue3-circle-menu.ssr.js",
@@ -11,6 +11,11 @@
     "dist/*",
     "src/**/*.vue"
   ],
+  "author": {
+    "name": "yingshaoxo",
+    "email": "yingshaoxo@gmail.com"
+  },
+  "homepage": "https://github.com/yingshaoxo/vue3-circle-menu",
   "sideEffects": false,
   "scripts": {
     "serve": "vue-cli-service serve dev/serve.ts",
