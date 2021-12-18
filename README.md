@@ -6,6 +6,10 @@
 
 ## How to use
 
+```shell
+npm i vue3-circle-menu
+```
+
 ```vue
 <script lang="ts">
 import { defineComponent } from "vue";
