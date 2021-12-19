@@ -17,6 +17,7 @@ export default /*#__PURE__*/ defineComponent({
   setup: (props) => {
     const dict = reactive({
       tempData: {
+        baseZIndex: 998,
         triggerReference: ref(null) as any,
         showMenu: false,
         centerX: 0.0,
@@ -28,7 +29,7 @@ export default /*#__PURE__*/ defineComponent({
             const { left, top } = triggerReference.getBoundingClientRect();
             dict.tempData.centerX = left + triggerReference.offsetWidth / 2;
             dict.tempData.centerY = top + triggerReference.offsetHeight / 2;
-            console.log(dict.tempData.centerX, dict.tempData.centerY);
+            // console.log(dict.tempData.centerX, dict.tempData.centerY);
           }
         },
         getPointOnCircleByAngle: (angle: number, radius: number) => {
@@ -53,10 +54,6 @@ export default /*#__PURE__*/ defineComponent({
       },
     });
 
-    onMounted(() => {
-      dict.functions.getTriggerPosition(dict.tempData.triggerReference);
-    });
-
     const closeMenu = () => {
       nextTick(() => {
         setTimeout(() => {
@@ -64,6 +61,34 @@ export default /*#__PURE__*/ defineComponent({
         }, 100);
       });
     };
+
+    function computeMaxZIndex() {
+      function getMaxZIndex(parent: any, current_z = 0) {
+        const z =
+          parent.style.zIndex != "" ? parseInt(parent.style.zIndex, 10) : 0;
+        if (z > current_z) current_z = z;
+        const children = parent.shadowRoot
+          ? parent.shadowRoot.children
+          : parent.children;
+        for (let i = 0; i < children.length; i++) {
+          const child = children[i];
+          current_z = getMaxZIndex(child, current_z);
+        }
+        return current_z;
+      }
+      return getMaxZIndex(document.body) + 1;
+    }
+
+    onMounted(() => {
+      dict.functions.getTriggerPosition(dict.tempData.triggerReference);
+
+      const maxZIndex = computeMaxZIndex();
+      dict.tempData.baseZIndex = maxZIndex + 1;
+
+      window.addEventListener("resize", () => {
+        dict.functions.getTriggerPosition(dict.tempData.triggerReference);
+      });
+    });
 
     return {
       dict,
@@ -76,6 +101,20 @@ export default /*#__PURE__*/ defineComponent({
 
 <template>
   <div
+    :style="{
+      width: '100vw',
+      height: '100vh',
+      position: 'fixed',
+      left: '0px',
+      top: '0px',
+      zIndex: dict.tempData.baseZIndex,
+      backgroundColor: 'black',
+      opacity: 0.0,
+    }"
+    @click="closeMenu"
+    v-if="dict.tempData.showMenu"
+  ></div>
+  <div
     :ref="
       (el) => {
         dict.tempData.triggerReference = el;
@@ -85,11 +124,6 @@ export default /*#__PURE__*/ defineComponent({
       () => {
         dict.functions.getTriggerPosition(dict.tempData.triggerReference);
         dict.tempData.showMenu = !dict.tempData.showMenu;
-      }
-    "
-    @focusout="
-      () => {
-        closeMenu();
       }
     "
   >
@@ -107,11 +141,12 @@ export default /*#__PURE__*/ defineComponent({
         ? dict.functions.getItemPositionY(index) + 'px'
         : dict.tempData.centerY + 'px',
       visibility: dict.tempData.showMenu ? 'visible' : 'hidden',
-      zIndex: 999,
       position: 'absolute',
       transitionProperty: 'left, top',
       transitionDuration: '1s',
+      zIndex: dict.tempData.baseZIndex + 1,
     }"
+    @click="closeMenu"
   >
     <slot :name="item"></slot>
   </div>

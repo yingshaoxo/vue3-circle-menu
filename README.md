@@ -2,7 +2,7 @@
 
 ## Demo
 
-![Alt Text](demo.gif)
+![Alt Text](https://github.com/yingshaoxo/vue3-circle-menu/raw/master/demo.gif)
 
 ## How to use
 
